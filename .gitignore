@@ -92,3 +92,14 @@ build/
 # Temporary files
 *.tmp
 *.temp
+
+# Generated documentation files (keep source .md files)
+Projeto_*.html
+Projeto_*.pdf
+Projeto_*.rtf
+convert-to-pdf.js
+sghss-project.zip
+
+# Other generated files
+*.zip
+*.tar.gz

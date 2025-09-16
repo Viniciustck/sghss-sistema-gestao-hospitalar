@@ -9,9 +9,8 @@
 
 **Aluno:** Vinicius Borges Pires  
 **RU:** 4327307  
-**Polo de Apoio:** [A definir]  
-**Semestre:** [A definir]  
-**Ano:** 2025
+**Ano:** 2025  
+**Repositório GitHub:** https://github.com/Viniciustck/sghss-sistema-gestao-hospitalar
 
 ---
 
@@ -270,5 +269,8 @@ Este projeto demonstra competências em:
 - Arquivo: `OPENAPI.yaml` - Documentação completa dos endpoints da API
 - Arquivo: `docs/backend-screenshots.md` - Exemplos de requisições e respostas da API
 - Arquivo: `docs/backend-screenshots-detail.md` - Screenshots detalhados do terminal e execução
+
+### 8.5 Repositório do Projeto
+O projeto está disponível no GitHub de forma funcional e limpa: https://github.com/Viniciustck/sghss-sistema-gestao-hospitalar
 
 
