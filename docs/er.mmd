@@ -1,0 +1,64 @@
+erDiagram
+  USER ||--o| PATIENT : has
+  USER ||--o| PROFESSIONAL : has
+  USER ||--o{ AUDIT_LOG : creates
+  PATIENT ||--o{ MEDICAL_RECORD : has
+  PATIENT ||--o{ APPOINTMENT : has
+  PATIENT ||--o{ PRESCRIPTION : has
+  PROFESSIONAL ||--o{ APPOINTMENT : has
+  PROFESSIONAL ||--o{ PRESCRIPTION : has
+
+  USER {
+    string id PK
+    string email
+    string passwordHash
+    string fullName
+    enum role
+  }
+  PATIENT {
+    string id PK
+    string documentId
+    date birthDate
+    string phone
+    string address
+  }
+  PROFESSIONAL {
+    string id PK
+    string specialty
+    string registryId
+    string phone
+  }
+  APPOINTMENT {
+    string id PK
+    date scheduledAt
+    enum status
+    enum type
+    string notes
+    string patientId FK
+    string professionalId FK
+  }
+  MEDICAL_RECORD {
+    string id PK
+    string content
+    string patientId FK
+    string createdById FK
+    date createdAt
+  }
+  PRESCRIPTION {
+    string id PK
+    string content
+    string patientId FK
+    string professionalId FK
+    date createdAt
+    date signedAt
+  }
+  AUDIT_LOG {
+    string id PK
+    string userId FK
+    string action
+    string entity
+    string entityId
+    string ip
+    string userAgent
+    date createdAt
+  }

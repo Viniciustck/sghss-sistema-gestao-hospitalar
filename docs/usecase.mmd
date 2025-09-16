@@ -1,0 +1,18 @@
+%% Diagrama de Casos de Uso - SGHSS
+%% Atores: Paciente, Profissional, Admin
+
+sequenceDiagram
+  %% Representação simplificada como fluxos principais
+  actor Paciente
+  actor Profissional
+  actor Admin
+  participant SGHSS
+
+  Paciente->>SGHSS: Login / Teleconsulta / Agendar
+  SGHSS-->>Paciente: Confirmação / Histórico
+
+  Profissional->>SGHSS: Atualizar prontuário / Emitir prescrição
+  SGHSS-->>Profissional: Histórico do paciente
+
+  Admin->>SGHSS: Gerenciar cadastros / Relatórios
+  SGHSS-->>Admin: Relatórios / Auditoria

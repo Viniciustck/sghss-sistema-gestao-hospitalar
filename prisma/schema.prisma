@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Perfis de acesso do sistema
+enum Role {
+  PATIENT
+  PROFESSIONAL
+  ADMIN
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  fullName      String
+  role          Role
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  patient       Patient?      @relation("UserPatient", fields: [patientId], references: [id])
+  patientId     String?       @unique
+
+  professional  Professional? @relation("UserProfessional", fields: [professionalId], references: [id])
+  professionalId String?      @unique
+
+  medicalRecordsCreated MedicalRecord[] @relation("MedicalRecordCreatedBy")
+
+  auditLogs     AuditLog[]
+}
+
+model Patient {
+  id            String    @id @default(cuid())
+  documentId    String?   @unique
+  birthDate     DateTime?
+  phone         String?
+  address       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User?     @relation("UserPatient")
+  medicalRecords MedicalRecord[]
+  appointments   Appointment[]
+  prescriptions  Prescription[]
+}
+
+model Professional {
+  id            String    @id @default(cuid())
+  specialty     String
+  registryId    String?   @unique // CRM/COREN/CRF etc.
+  phone         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User?     @relation("UserProfessional")
+  appointments  Appointment[]
+  prescriptions Prescription[]
+}
+
+model Appointment {
+  id              String      @id @default(cuid())
+  patient         Patient     @relation(fields: [patientId], references: [id])
+  patientId       String
+  professional    Professional @relation(fields: [professionalId], references: [id])
+  professionalId  String
+  scheduledAt     DateTime
+  status          AppointmentStatus @default(SCHEDULED)
+  type            AppointmentType   @default(IN_PERSON)
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELED
+  NO_SHOW
+}
+
+enum AppointmentType {
+  IN_PERSON
+  TELEMEDICINE
+}
+
+model MedicalRecord {
+  id          String   @id @default(cuid())
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  patientId   String
+  content     String   // JSON ou texto estruturado
+  createdBy   User?    @relation("MedicalRecordCreatedBy", fields: [createdById], references: [id])
+  createdById String?
+  createdAt   DateTime @default(now())
+}
+
+model Prescription {
+  id              String       @id @default(cuid())
+  patient         Patient      @relation(fields: [patientId], references: [id])
+  patientId       String
+  professional    Professional @relation(fields: [professionalId], references: [id])
+  professionalId  String
+  content         String       // JSON ou texto com posologia
+  createdAt       DateTime     @default(now())
+  signedAt        DateTime?
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  user        User?    @relation(fields: [userId], references: [id])
+  userId      String?
+  action      String
+  entity      String?
+  entityId    String?
+  ip          String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+}

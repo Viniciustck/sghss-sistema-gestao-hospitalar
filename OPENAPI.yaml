@@ -1,0 +1,116 @@
+openapi: 3.0.3
+info:
+  title: SGHSS API
+  version: 0.1.0
+servers:
+  - url: http://localhost:4000
+paths:
+  /health:
+    get:
+      summary: Healthcheck
+      responses:
+        '200':
+          description: OK
+  /auth/register:
+    post:
+      summary: Registrar usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+                fullName: { type: string }
+                role: { type: string, enum: [PATIENT, PROFESSIONAL, ADMIN] }
+              required: [email, password, fullName]
+      responses:
+        '201': { description: Criado }
+  /auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+              required: [email, password]
+      responses:
+        '200': { description: OK }
+  /patients:
+    get:
+      summary: Listar pacientes (ADMIN)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: OK }
+  /patients/profile:
+    post:
+      summary: Criar/atualizar perfil do paciente (PATIENT/ADMIN)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '201': { description: Criado }
+  /professionals:
+    get:
+      summary: Listar profissionais (ADMIN)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: OK }
+  /professionals/profile:
+    post:
+      summary: Criar/atualizar perfil do profissional (PROFESSIONAL/ADMIN)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '201': { description: Criado }
+  /appointments:
+    get:
+      summary: Listar consultas (ADMIN/PROFESSIONAL)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Criar consulta (ADMIN/PROFESSIONAL)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '201': { description: Criado }
+  /appointments/{id}/cancel:
+    patch:
+      summary: Cancelar consulta (ADMIN/PROFESSIONAL)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /prescriptions:
+    get:
+      summary: Listar prescrições (ADMIN/PROFESSIONAL)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Criar prescrição (PROFESSIONAL/ADMIN)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '201': { description: Criado }
+  /telemedicine/room:
+    post:
+      summary: Criar sala de telemedicina (stub) (ADMIN/PROFESSIONAL)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '201': { description: Criado }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+

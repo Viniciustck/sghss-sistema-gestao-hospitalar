@@ -1,0 +1,58 @@
+classDiagram
+  class User {
+    +id: String
+    +email: String
+    +passwordHash: String
+    +fullName: String
+    +role: Role
+  }
+  class Patient {
+    +id: String
+    +documentId: String
+    +birthDate: Date
+    +phone: String
+    +address: String
+  }
+  class Professional {
+    +id: String
+    +specialty: String
+    +registryId: String
+    +phone: String
+  }
+  class Appointment {
+    +id: String
+    +scheduledAt: Date
+    +status: AppointmentStatus
+    +type: AppointmentType
+    +notes: String
+  }
+  class MedicalRecord {
+    +id: String
+    +content: String
+    +createdAt: Date
+  }
+  class Prescription {
+    +id: String
+    +content: String
+    +createdAt: Date
+    +signedAt: Date
+  }
+  class AuditLog {
+    +id: String
+    +action: String
+    +entity: String
+    +entityId: String
+    +createdAt: Date
+  }
+
+  User --> Patient : 1..0..1
+  User --> Professional : 1..0..1
+  User --> AuditLog : 1..*
+  Patient --> MedicalRecord : 1..*
+  Patient --> Appointment : 1..*
+  Patient --> Prescription : 1..*
+  Professional --> Appointment : 1..*
+  Professional --> Prescription : 1..*
+  Appointment --> Patient
+  Appointment --> Professional
+  MedicalRecord --> User : createdBy
